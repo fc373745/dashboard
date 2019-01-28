@@ -1,10 +1,10 @@
 import React from "react";
-import RotatingGlobe from "./RotatingGlobe";
+import Map from "./Map/Map";
 
 const Container: React.FunctionComponent = () => {
     return (
         <div>
-            <RotatingGlobe />
+            <Map />
         </div>
     );
 };
