@@ -98,7 +98,7 @@ const Map: React.FunctionComponent = () => {
     };
 
     useEffect(() => {
-        drawMap();
+        // drawMap();
     }, []);
 
     const drawMap = () => {
