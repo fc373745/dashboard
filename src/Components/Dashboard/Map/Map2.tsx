@@ -9,7 +9,61 @@ import { event, select, Selection } from "d3-selection";
 import "d3-transition";
 import { zoom, zoomIdentity } from "d3-zoom";
 import React, { useEffect, useState } from "react";
+import { createGlobalStyle } from "styled-components";
 import { feature, mesh } from "topojson";
+
+const nyc: GeoPermissibleObjects = {
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [-73.9313850409, 40.694960689]
+    },
+    properties: {
+        name: "Dinagat Islands"
+    }
+};
+
+const Global = createGlobalStyle`
+    .states{
+        fill: #eee;
+        fill-opacity: 0.4
+    }
+    .state-borders{
+        fill: none;
+        stroke: #fff;
+        stroke-width: 0.5px;
+        stroke-linejoin: round;
+        stroke-linecap: round;
+        pointer-events: none;
+    }
+    svg{
+        background-color: #222
+    }
+
+    .flight-path{
+        stroke: #000;
+        stroke-width: 10px;
+        fill: none
+    }
+
+`;
+
+const flightPath = {
+    type: "FeatureCollection",
+    features: [
+        {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [
+                    [-96.7656929463, 32.7939804066],
+                    [-87.6862308732, 41.8372950615]
+                ]
+            },
+            properties: {}
+        }
+    ]
+};
 
 const CITIES = [
     {
@@ -49,8 +103,10 @@ interface Props {
 
 const Map: React.FC<Props> = (props: Props) => {
     const mapRef = React.createRef<SVGSVGElement>();
+    const flightPathRef = React.createRef<SVGSVGElement>();
     const projection: GeoProjection = geoMercator();
     const path = geoPath().projection(projection);
+    const flightGeoPath = geoPath();
     let index = 0;
     let city = CITIES[0];
 
@@ -134,15 +190,16 @@ const Map: React.FC<Props> = (props: Props) => {
 
             const center = CITIES[3].lnglat;
 
-            mapSelection.call(transition);
+            // mapSelection.call(transition);
 
-            projection.scale(7000).center(center as any);
+            projection.scale(1000).center([-98.5795, 39.8283]);
 
             const feat = feature(usMap, usMap.objects.states);
             //@ts-ignore
             const features = feat["features"];
+            console.log(features);
             const meshed = mesh(usMap, usMap.objects.states, (a, b) => a !== b);
-            const meshPath = path(mesh as any);
+            const meshPath = path(meshed as any);
 
             mapSelection
                 .attr("class", "states")
@@ -176,13 +233,40 @@ const Map: React.FC<Props> = (props: Props) => {
             //             return ""
             //         }
             //     })
+
+            mapSelection
+                .selectAll(".flight-path")
+                .data(flightPath.features)
+                .enter()
+                .append("path")
+                .attr("class", "flight-path")
+                .attr("d", path as any);
         }
     };
 
     return (
-        <svg width={props.width} height={props.height}>
-            <g ref={mapRef} />
-        </svg>
+        <div>
+            <svg width={props.width} height={props.height}>
+                <Global />
+                <g ref={mapRef} />
+                <g ref={flightPathRef} />
+            </svg>
+            <button
+                onClick={() => {
+                    const centroid: number[] = path.centroid(nyc);
+                    const x = props.width / 2 - centroid[0];
+                    const y = props.height / 2 - centroid[1];
+                    if (mapSelection) {
+                        mapSelection
+                            .transition()
+                            .duration(750)
+                            .attr("transform", `translate(${x}, ${y})`);
+                    }
+                }}
+            >
+                Click
+            </button>
+        </div>
     );
 };
 
