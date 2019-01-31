@@ -14,7 +14,7 @@ const Container: React.FunctionComponent = () => {
     return (
         <div>
             <StyledContainer />
-            <Map width={960} height={600} />
+            <Map width={1100} height={600} />
             <PilotInfo width={1401} />
             <PilotInfo width={1401} />
         </div>

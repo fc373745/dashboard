@@ -42,7 +42,7 @@ const Global = createGlobalStyle`
 
     .flight-path{
         stroke: #000;
-        stroke-width: 10px;
+        stroke-width: 5px;
         fill: none
     }
 
@@ -167,17 +167,27 @@ const Map: React.FC<Props> = (props: Props) => {
     };
 
     const transition = () => {
-        index++;
-        index = index % CITIES.length;
+        index += 5;
+        // index = index % CITIES.length;
 
-        city = CITIES[index];
+        // city = CITIES[index];
+
+        // if (mapSelection) {
+        //     mapSelection
+        //         .transition()
+        //         .delay(500)
+        //         .duration(4000)
+        //         .call(zBehavior.transform as any, transform)
+        //         .on("end", () => {
+        //             mapSelection.call(transition);
+        //         });
+        // }
 
         if (mapSelection) {
             mapSelection
                 .transition()
-                .delay(500)
-                .duration(4000)
-                .call(zBehavior.transform as any, transform)
+                .duration(1500)
+                .attr("transform", `translate(${index},${index})`)
                 .on("end", () => {
                     mapSelection.call(transition);
                 });
@@ -190,9 +200,9 @@ const Map: React.FC<Props> = (props: Props) => {
 
             const center = CITIES[3].lnglat;
 
-            // mapSelection.call(transition);
+            mapSelection.call(transition);
 
-            projection.scale(1000).center([-98.5795, 39.8283]);
+            projection.scale(5000).center([-98.5795, 39.8283]);
 
             const feat = feature(usMap, usMap.objects.states);
             //@ts-ignore
