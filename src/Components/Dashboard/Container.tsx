@@ -1,12 +1,12 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
-import Map from "./Map/Map2";
+import Map from "./Map/MapFinal";
 import PilotInfo from "./PilotInfo/PilotInfo";
 
 const StyledContainer = createGlobalStyle`
     body {
         padding-top: 10px;
-        background-color: #0a0f0f;
+        background-color: #eee;
     }
 `;
 
