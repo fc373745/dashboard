@@ -202,7 +202,7 @@ const Map: React.FC<Props> = (props: Props) => {
 
             mapSelection.call(transition);
 
-            projection.scale(5000).center([-98.5795, 39.8283]);
+            projection.scale(4000).center([-98.5795, 39.8283]);
 
             const feat = feature(usMap, usMap.objects.states);
             //@ts-ignore
