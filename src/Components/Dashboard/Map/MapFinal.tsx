@@ -80,7 +80,6 @@ const Map: React.FC<Props> = (props: Props) => {
             fetchMap();
         }
         drawChart();
-        console.log("hi");
     });
 
     const zoomed = (): void => {
