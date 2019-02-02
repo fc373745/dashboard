@@ -1,8 +1,8 @@
+import { easeLinear } from "d3-ease";
 import { scaleLinear } from "d3-scale";
 import { select, Selection } from "d3-selection";
 import { curveMonotoneX, line } from "d3-shape";
 import React, { useEffect, useRef, useState } from "react";
-
 type Props = {
     width: number;
 };
@@ -39,19 +39,56 @@ const PilotInfo: React.FC<Props> = (props: Props) => {
     });
 
     const drawLineChart = () => {
-        if (lineSelection && lineChartData.length > 0) {
-            console.log(lineChartData);
+        //@ts-ignore
+        const self = this;
+        if (lineSelection) {
+            lineSelection
+                .append("defs")
+                .append("clipPath")
+                .attr("id", "clip")
+                .append("rect")
+                .attr("width", 500)
+                .attr("width", 300);
+
+            lineSelection.append("g").attr("clip-path", "url(#clip)");
+
             lineSelection
                 .append("path")
                 .datum(lineChartData)
                 .attr("class", "line")
-                .attr("stroke", "blue")
-                .attr("fill", "none")
-                .attr("d", lineGenerator as any);
+                .transition()
+                .duration(500)
+                .ease(easeLinear)
+                .on("start", function() {
+                    // tick();
+                });
         }
     };
 
-    const tick = () => {};
+    function tick() {
+        console.log("wtf");
+
+        if (lineSelection) {
+            console.log(lineChartData);
+            lineChartData.push(Math.floor(Math.random() * 40));
+
+            lineSelection
+                .append("path")
+                .datum(lineChartData)
+                .attr("d", lineGenerator as any)
+                .attr("transform", null);
+
+            // active(lineChartRef.current)!
+            //     .attr("transform", `translate(${(x(-1), 0)})`)
+            //     .transition()
+            //     .duration(500);
+            // .on("start", () => {
+            //     lineSelection.call(tick);
+            // });
+
+            lineChartData.shift();
+        }
+    }
 
     return (
         <div>
