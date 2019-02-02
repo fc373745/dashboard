@@ -94,7 +94,7 @@ const Map: React.FC<Props> = (props: Props) => {
     const zBehavior = zoom().on("zoom", zoomed);
 
     const transform = () => {
-        if (city) {
+        if (city && !following) {
             const cityPoint: GeoPermissibleObjects = {
                 type: "Feature",
                 geometry: {
@@ -107,11 +107,15 @@ const Map: React.FC<Props> = (props: Props) => {
             };
 
             const centroid: number[] = path.centroid(cityPoint);
-
             return zoomIdentity
                 .translate(props.width / 2, props.height / 2)
                 .scale(4)
                 .translate(-centroid[0], -centroid[1]);
+        } else if (following && flightOneLocation) {
+            return zoomIdentity
+                .translate(props.width / 2, props.height / 2)
+                .scale(4)
+                .translate(-flightOneLocation[0], -flightOneLocation[1]);
         }
         return zoomIdentity.scale(1);
     };
@@ -125,7 +129,6 @@ const Map: React.FC<Props> = (props: Props) => {
                 if (flight === "one") {
                     flightOneLocation = [p.x, p.y];
                 }
-                console.log(flightOneLocation);
                 return "translate(" + p.x + "," + p.y + ")";
             };
         };
@@ -206,22 +209,6 @@ const Map: React.FC<Props> = (props: Props) => {
                         translateAlong(mappath2.node(), "two")
                     );
             }
-
-            // const point = mapSelection
-            //     .selectAll(".city")
-            //     .data(initialFlightPoints)
-            //     .enter()
-            //     .append("g")
-            //     .classed("city", true)
-            //     .attr("transform", (d: City) => {
-            //         const lnglat = projection(d.lnglat as any);
-            //         if (lnglat) {
-            //             const lng: any = lnglat[0];
-            //             const lat: any = lnglat[1];
-            //             return `translate(${lng}, ${lat})`;
-            //         }
-            //         return "";
-            //     });
         }
     };
 
@@ -250,15 +237,23 @@ const Map: React.FC<Props> = (props: Props) => {
             mapSelection
                 .transition()
                 .duration(15)
-                .attr(
-                    "transform",
-                    `translate(${props.width / 2}, ${props.height /
-                        2})scale(4)translate(${-flightOneLocation[0]}, ${-flightOneLocation[1]})`
-                )
+                .call(zBehavior.transform as any, transform)
                 .on("end", () => {
                     if (following) {
                         mapSelection.call(followFlightOne);
                     }
+                });
+        }
+    };
+
+    const setFlightOne = () => {
+        if (mapSelection) {
+            mapSelection
+                .transition()
+                .duration(450)
+                .call(zBehavior.transform as any, transform)
+                .on("end", () => {
+                    mapSelection.call(followFlightOne);
                 });
         }
     };
@@ -293,7 +288,7 @@ const Map: React.FC<Props> = (props: Props) => {
                 <button
                     onClick={() => {
                         setFollowing(true);
-                        followFlightOne();
+                        setFlightOne();
                     }}
                 >
                     Flight ONe
