@@ -272,7 +272,10 @@ const Map: React.FC<Props> = (props: Props) => {
                 {cities.map(city => (
                     <button
                         key={city.placeName}
-                        onClick={() => setCity(city.lnglat)}
+                        onClick={() => {
+                            setFollowing(false);
+                            setCity(city.lnglat);
+                        }}
                     >
                         {city.placeName}
                     </button>
