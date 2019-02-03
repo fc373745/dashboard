@@ -2,6 +2,7 @@ import { easeLinear } from "d3-ease";
 import { scaleLinear } from "d3-scale";
 import { select, Selection } from "d3-selection";
 import { curveMonotoneX, line } from "d3-shape";
+import "d3-transition";
 import React, { useEffect, useRef, useState } from "react";
 type Props = {
     width: number;
@@ -39,8 +40,6 @@ const PilotInfo: React.FC<Props> = (props: Props) => {
     });
 
     const drawLineChart = () => {
-        //@ts-ignore
-        const self = this;
         if (lineSelection) {
             lineSelection
                 .append("defs")
@@ -57,10 +56,10 @@ const PilotInfo: React.FC<Props> = (props: Props) => {
                 .datum(lineChartData)
                 .attr("class", "line")
                 .transition()
-                .duration(500)
+                .duration(1500)
                 .ease(easeLinear)
                 .on("start", function() {
-                    // tick();
+                    tick();
                 });
         }
     };
@@ -73,18 +72,16 @@ const PilotInfo: React.FC<Props> = (props: Props) => {
             lineChartData.push(Math.floor(Math.random() * 40));
 
             lineSelection
-                .append("path")
-                .datum(lineChartData)
                 .attr("d", lineGenerator as any)
                 .attr("transform", null);
 
-            // active(lineChartRef.current)!
-            //     .attr("transform", `translate(${(x(-1), 0)})`)
-            //     .transition()
-            //     .duration(500);
-            // .on("start", () => {
-            //     lineSelection.call(tick);
-            // });
+            lineSelection
+                .select(".line")
+                .attr("transform", `translate(${(x(-1), 0)})`)
+                .transition()
+                .on("start", () => {
+                    lineSelection.call(tick);
+                });
 
             lineChartData.shift();
         }
