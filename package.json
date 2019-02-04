@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/d3-axis": "^1.0.11",
     "@types/d3-ease": "^1.0.7",
     "@types/d3-fetch": "^1.1.5",
     "@types/d3-geo": "^1.11.0",
@@ -19,6 +20,7 @@
     "@types/react-dom": "16.0.11",
     "@types/styled-components": "^4.1.6",
     "@types/topojson": "^3.2.1",
+    "d3-axis": "^1.0.12",
     "d3-ease": "^1.0.5",
     "d3-fetch": "^1.1.2",
     "d3-geo": "^1.11.3",

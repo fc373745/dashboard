@@ -1,6 +1,7 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
-import PilotInfo from "./PilotInfo/PilotInfo";
+import Map from "./Map/MapFinal";
+import PilotInfo from "./PilotInfo/PilotInfo2";
 
 const StyledContainer = createGlobalStyle`
     body {
@@ -13,9 +14,9 @@ const Container: React.FunctionComponent = () => {
     return (
         <div>
             <StyledContainer />
-            {/* <Map width={820} height={450} />
-            <PilotInfo width={500} /> */}
-            <PilotInfo width={500} />
+            <Map width={820} height={600} />
+            <PilotInfo width={600} height={200} ins={0} />
+            <PilotInfo width={600} height={200} ins={1} />
         </div>
     );
 };
