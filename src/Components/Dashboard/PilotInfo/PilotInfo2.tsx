@@ -5,7 +5,7 @@ import { select, Selection } from "d3-selection";
 import { curveMonotoneX, line } from "d3-shape";
 import { active } from "d3-transition";
 import React from "react";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 const Global = createGlobalStyle`
     .line0 {
@@ -13,6 +13,11 @@ const Global = createGlobalStyle`
         stroke: black;
         stroke-width: 1.5px;
     }
+`;
+
+const PilotInfoGrid = styled.div`
+    grid-column: 1 / span 3;
+    grid-row: 2;
 `;
 
 type Props = {
@@ -131,10 +136,12 @@ class PilotInfo extends React.Component<Props> {
 
     render() {
         return (
-            <svg width={this.props.width} height={this.props.height}>
-                <Global />
-                <g ref={this.svgRef} />
-            </svg>
+            <PilotInfoGrid>
+                <svg width={this.props.width} height={this.props.height}>
+                    <Global />
+                    <g ref={this.svgRef} />
+                </svg>
+            </PilotInfoGrid>
         );
     }
 }

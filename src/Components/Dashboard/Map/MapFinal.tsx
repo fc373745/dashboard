@@ -1,7 +1,7 @@
 import { easeLinear } from "d3-ease";
 import { json } from "d3-fetch";
 import {
-    geoMercator,
+    geoAlbers,
     geoPath,
     GeoPermissibleObjects,
     GeoProjection
@@ -9,16 +9,9 @@ import {
 import { event, select, Selection } from "d3-selection";
 import { zoom, zoomIdentity } from "d3-zoom";
 import React, { useEffect, useRef, useState } from "react";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { feature, mesh } from "topojson";
-import {
-    cities,
-    flightPath1,
-    flightPath2,
-    initialFlightPoints,
-    US_MAP_CENTER,
-    US_MAP_DEFAULT_SCALE
-} from "./Data";
+import { cities, flightPath1, flightPath2, initialFlightPoints } from "./Data";
 
 const Global = createGlobalStyle`
     .flight-path1{
@@ -35,6 +28,10 @@ const Global = createGlobalStyle`
     }
 `;
 
+const MapGrid = styled.div`
+    grid-row: 2 / span 3;
+    grid-column: 4 / span 4;
+`;
 interface Props {
     width: number;
     height: number;
@@ -52,8 +49,12 @@ const Map: React.FC<Props> = (props: Props) => {
     let following: boolean = false;
     const mapRef = useRef<SVGSVGElement | null>(null);
 
-    const projection: GeoProjection = geoMercator();
-    projection.scale(US_MAP_DEFAULT_SCALE).center(US_MAP_CENTER);
+    const getScale = () => {
+        return 1.036 * props.width + 105.7;
+    };
+
+    const projection: GeoProjection = geoAlbers();
+    projection.translate([props.width / 2, props.height / 2]).scale(getScale());
     const path = geoPath().projection(projection);
 
     const [usMap, setMap] = useState<any>(null);
@@ -193,7 +194,7 @@ const Map: React.FC<Props> = (props: Props) => {
 
                 circle1
                     .transition()
-                    .duration(40000)
+                    .duration(60000 * 10)
                     .ease(easeLinear)
                     .attrTween(
                         "transform",
@@ -201,7 +202,7 @@ const Map: React.FC<Props> = (props: Props) => {
                     );
                 circle2
                     .transition()
-                    .duration(25000)
+                    .duration(45000)
                     .ease(easeLinear)
                     .attrTween(
                         "transform",
@@ -249,7 +250,7 @@ const Map: React.FC<Props> = (props: Props) => {
         if (mapSelection) {
             mapSelection
                 .transition()
-                .duration(450)
+                .duration(800)
                 .call(zBehavior.transform as any, transform)
                 .on("end", () => {
                     mapSelection.call(followFlightOne);
@@ -262,7 +263,7 @@ const Map: React.FC<Props> = (props: Props) => {
     };
 
     return (
-        <div>
+        <MapGrid>
             <Global />
             <svg width={props.width} height={props.height}>
                 <g ref={mapRef} />
@@ -296,7 +297,7 @@ const Map: React.FC<Props> = (props: Props) => {
                     Flight ONe
                 </button>
             </div>
-        </div>
+        </MapGrid>
     );
 };
 

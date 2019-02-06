@@ -62,6 +62,6 @@ export const flightPath2 = {
     ]
 };
 
-export const US_MAP_CENTER = [-91, 37] as [number, number];
+export const US_MAP_CENTER = [-95.57, 39.82] as [number, number];
 
 export const US_MAP_DEFAULT_SCALE = 800;
