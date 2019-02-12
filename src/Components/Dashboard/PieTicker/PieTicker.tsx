@@ -3,6 +3,7 @@ import { interpolate } from "d3-interpolate";
 import { select, Selection } from "d3-selection";
 import { arc } from "d3-shape";
 import React, { useEffect, useRef, useState } from "react";
+import { useSpring } from "react-spring";
 import styled, { createGlobalStyle } from "styled-components";
 
 const Global = createGlobalStyle`
@@ -24,7 +25,7 @@ const Global = createGlobalStyle`
 
 const PieTickerGrid = styled.div`
     grid-row: 5;
-    grid-column: 1;
+    grid-column: 2;
 `;
 
 type D3SVGSelection = Selection<
@@ -48,14 +49,23 @@ let Data = {
 const PieTicker: React.FC<Props> = (props: Props) => {
     const pieRef = useRef<SVGSVGElement | null>(null);
     const [selection, setSelection] = useState<D3SVGSelection>(null);
+    const animation = useSpring({
+        from: {
+            opacity: 0,
+            transform: "translateX(-200px)"
+        },
+        opacity: 1,
+        transform: "translateX(0px)",
+        friction: 40,
+        zIndex: -10
+    });
 
     const arcGenerator = arc()
         .innerRadius(70)
         .outerRadius(100)
         .startAngle(-0.75 * Math.PI)
         .endAngle(function(d: any) {
-            console.log((d.value / d.size) * 2 * Math.PI);
-            return (d.value / d.size) * 0.75 * Math.PI;
+            return (d.value / d.size) * (0.75 * Math.PI * 2) - 0.75 * Math.PI;
         });
     useEffect(() => {
         if (!selection) {
@@ -88,18 +98,16 @@ const PieTicker: React.FC<Props> = (props: Props) => {
             const path = selection.append("path").attr("class", "foreground");
 
             (function update() {
-                if (Data.value > 0) {
-                    Data.previous = Data.value;
-                    Data.value--;
-                    path.transition()
-                        .ease(easeElastic)
-                        .duration(750)
-                        .attrTween("d", arcTween as any);
+                Data.previous = Data.value;
+                Data.value = Math.floor(Math.random() * (99 - 25) + 25);
+                path.transition()
+                    .ease(easeElastic)
+                    .duration(750)
+                    .attrTween("d", arcTween as any);
 
-                    label.text(Data.value);
-                    let timeout = Math.random() * (4500 - 1000) + 1000;
-                    setTimeout(update, timeout);
-                }
+                label.text(Data.value);
+                let timeout = Math.random() * (3000 - 1000) + 1000;
+                setTimeout(update, timeout);
             })();
         }
     };
@@ -107,6 +115,7 @@ const PieTicker: React.FC<Props> = (props: Props) => {
     return (
         <PieTickerGrid>
             <Global />
+
             <svg width={200} height={200}>
                 <g ref={pieRef} />
             </svg>

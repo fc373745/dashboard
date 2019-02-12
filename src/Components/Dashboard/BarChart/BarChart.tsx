@@ -8,7 +8,7 @@ type D3Selection = Selection<SVGSVGElement | null, {}, null, undefined>;
 const infoWidth = 150;
 const BarChartGrid = styled.div`
     grid-row: 4;
-    grid-column: 1 / span 3;
+    grid-column: 2 / span 3;
 `;
 type Props = {
     width: number;

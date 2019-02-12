@@ -30,7 +30,7 @@ const Global = createGlobalStyle`
 
 const MapGrid = styled.div`
     grid-row: 2 / span 3;
-    grid-column: 4 / span 4;
+    grid-column: 5 / span 4;
 `;
 interface Props {
     width: number;

@@ -3,6 +3,7 @@ import styled, { createGlobalStyle } from "styled-components";
 import BarChart from "./BarChart/BarChart";
 import LineChart from "./LineChart/LineChart";
 import Map from "./Map/MapFinal";
+import NavBar from "./NavBar/NavBar";
 import PieTicker from "./PieTicker/PieTicker";
 import PilotInfo from "./PilotInfo/PilotInfo2";
 
@@ -17,15 +18,17 @@ const StyledContainer = createGlobalStyle`
 
 const ContainerGrid = styled.div`
     display: grid;
-    grid-template: 50px repeat(4, 1fr) / repeat(8, 1fr);
+    grid-template: 50px repeat(auto-fill, minmax(300px, 1fr)) / 75px repeat(
+            8,
+            1fr
+        );
 `;
 const Container: React.FunctionComponent = () => {
     const frw = window.innerWidth / 8;
-    console.log(frw, frw * 3);
-    const frl = window.innerHeight / 4;
     return (
         <ContainerGrid>
             <StyledContainer />
+            <NavBar />
             <Map width={frw * 4} height={500} />
             <PilotInfo width={600} height={200} ins={0} />
             <LineChart width={frw * 3} height={200} />

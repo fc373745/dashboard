@@ -22,7 +22,7 @@ const Global = createGlobalStyle`
 `;
 const LineChartGrid = styled.div`
     grid-row: 3;
-    grid-column: 1 / span 3;
+    grid-column: 2 / span 3;
 `;
 
 const LineChartInfo = styled.div`
